@@ -1,6 +1,6 @@
 package org.example.piece;
 
-import org.example.Board;
+import org.example.board.Board;
 import org.example.Color;
 import org.example.Coordinates;
 
@@ -36,4 +36,28 @@ abstract public class Piece {
     }
 
     protected abstract Set<CoodinatesShift> getPieceMoves();
+
+    protected Set<CoodinatesShift> getPieceAttacks() {
+        return getPieceMoves();
+    }
+
+    public Set<Coordinates> getAttackedSquares(Board board) {
+        Set<CoodinatesShift> pieceAttacks = getPieceAttacks();
+        Set<Coordinates> result = new HashSet<>();
+
+        for (CoodinatesShift pieceAttack : pieceAttacks) {
+            if (coordinates.canShift(pieceAttack)) {
+                Coordinates shiftedCoordinates = coordinates.shift(pieceAttack);
+                
+                if (isSquareAvailableForAttack(shiftedCoordinates, board)) {
+                    result.add(shiftedCoordinates);
+                }
+            }
+        }
+        return result;
+    }
+
+    protected boolean isSquareAvailableForAttack(Coordinates coordinates, Board board) {
+        return true;
+    }
 }
